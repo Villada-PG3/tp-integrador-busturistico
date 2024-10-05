@@ -10,3 +10,9 @@ class IndexView(TemplateView):
     
 class BaseView(TemplateView):
     template_name = 'base/base.html'
+
+class RecorridoView(TemplateView):
+    template_name = 'recorrido/recorrido.html'
+    
+class ParadaView(TemplateView):
+    template_name = 'parada/parada.html'

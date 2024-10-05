@@ -1,0 +1,74 @@
+
+<link rel="stylesheet" href="/static/css/recorrido/styles.css">
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block title %}Recorridos - BusTurístico BA{% endblock %}
+
+{% block content %}
+
+
+
+<section class="recorridos py-5">
+    <div class="container">
+        <h2 class="text-center font-weight-bold mb-5">Recorridos Turísticos</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <a href="#" class="btn btn-success btn-block py-5 recorrido-link" data-color="Verde" style="background-color: #28a745;">
+                    <h4 class="text-white font-weight-bold">Recorrido Verde</h4>
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="#" class="btn btn-primary btn-block py-5 recorrido-link" data-color="Azul" style="background-color: #007bff;">
+                    <h4 class="text-white font-weight-bold">Recorrido Azul</h4>
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="#" class="btn btn-warning btn-block py-5 recorrido-link" data-color="Amarillo" style="background-color: #ffc107;">
+                    <h4 class="text-white font-weight-bold">Recorrido Amarillo</h4>
+                </a>
+            </div>
+        </div>
+
+       
+        <div class="recorrido-detalle mt-5 d-none">
+            <h3 id="recorrido-title" class="text-center font-weight-bold mb-5"></h3>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5 class="font-weight-bold">Plaza de Mayo</h5>
+                    <p class="text-muted">La plaza más antigua de Buenos Aires, rodeada por edificios históricos como la Casa Rosada.</p>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5 class="font-weight-bold">Teatro Colón</h5>
+                    <p class="text-muted">Uno de los teatros de ópera más importantes del mundo, famoso por su acústica y arquitectura.</p>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5 class="font-weight-bold">Puerto Madero</h5>
+                    <p class="text-muted">Un moderno barrio costero con restaurantes, paseos y vistas impresionantes.</p>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h5 class="font-weight-bold">Caminito</h5>
+                    <p class="text-muted">Un icónico rincón del barrio de La Boca, famoso por sus casas coloridas y el tango.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+   
+    document.querySelectorAll('.recorrido-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var recorridoColor = this.getAttribute('data-color');
+            document.getElementById('recorrido-title').innerText = 'Recorrido ' + recorridoColor;
+            document.querySelector('.recorrido-detalle').classList.remove('d-none');
+            window.scrollTo(0, document.querySelector('.recorrido-detalle').offsetTop);
+        });
+    });
+</script>
+{% endblock %}
+
+
+    

@@ -1,0 +1,31 @@
+.atractivo {
+    cursor: pointer;
+}
+
+.rating {
+    color: #FFD700; 
+}
+
+.atractivo:hover .rating {
+    font-weight: bold;
+}
+
+.atractivo[data-rating="5"] .rating::before {
+    content: '★★★★★';
+}
+
+.atractivo[data-rating="4"] .rating::before {
+    content: '★★★★☆';
+}
+
+.atractivo[data-rating="3"] .rating::before {
+    content: '★★★☆☆';
+}
+
+.atractivo[data-rating="2"] .rating::before {
+    content: '★★☆☆☆';
+}
+
+.atractivo[data-rating="1"] .rating::before {
+    content: '★☆☆☆☆';
+}

@@ -22,10 +22,10 @@ erDiagram
     Viaje}|--||Recorrido : ejecutan
 
     Recorrido{
+        varchar nombre
         varchar codigo_alfanumerico PK
         time hora_inicio
         time hora_fin
-        int id_ord_parada FK
         time frecuencia
     }
     

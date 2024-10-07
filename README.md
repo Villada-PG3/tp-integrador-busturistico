@@ -25,7 +25,7 @@ erDiagram
         varchar codigo_alfanumerico PK
         time hora_inicio
         time hora_fin
-        int id_orden FK
+        int id_ord_parada FK
         time frecuencia
     }
     
@@ -42,7 +42,7 @@ erDiagram
         int id_estadoV FK
         time horario_inicio_programado
         time horario_fin_programado
-        date fecha_viaje_programado
+        date fecha_viaje
         datetime marca_inicio_viaje_real
         datetime marca_fin_viaje_real
     }
@@ -51,6 +51,7 @@ erDiagram
 
     Estado_viaje{
         int id_estadoV PK
+        varchar nombre
         varchar descripcion
     }
     
@@ -59,7 +60,8 @@ erDiagram
 
     Chofer{
         int legajo PK
-        varchar nombre_completo
+        varchar nombre
+        varchar apellido
         
     }
     Bus{
@@ -73,6 +75,7 @@ erDiagram
 
     Estado_bus{
         int id_estadoB PK
+        varchar nombre
         varchar descripcion
     }
 

@@ -1,0 +1,136 @@
+/* Estilos generales */
+.card {
+    transition: all 0.3s ease;
+    border: none !important;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Estilos para badges de estado */
+.estado-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    text-transform: capitalize;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+/* Títulos y texto */
+.card-title {
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+h4 {
+    color: #2c3e50;
+    font-size: 1.25rem;
+}
+
+.text-muted {
+    color: #6c757d !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Sombras y efectos */
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+/* Bordes y separadores */
+.border-bottom {
+    border-bottom: 2px solid #e9ecef !important;
+}
+
+/* Botones */
+.btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Espaciado */
+.card-body {
+    padding: 1.5rem !important;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .h5 {
+        font-size: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Mejoras visuales adicionales */
+.fas {
+    color: #007bff;
+}
+
+.h5 {
+    margin-bottom: 0;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+/* Hover effects */
+.card:hover .fas {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Container padding */
+.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}

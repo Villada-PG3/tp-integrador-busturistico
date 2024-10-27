@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Lista de Buses</h2>
+    <a href="{% url 'crear_bus' %}" class="btn btn-primary mb-3">
+        <i class="fas fa-plus"></i> Añadir Nuevo Bus
+    </a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Patente</th>
+                <th>Número de Unidad</th>
+                <th>Fecha de Compra</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bus in buses %}
+            <tr>
+                <td>{{ bus.patente }}</td>
+                <td>{{ bus.num_unidad }}</td>
+                <td>{{ bus.fecha_compra }}</td>
+                <td>{{ bus.estado_bus.nombre }}</td>
+                <td>
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="bus_id" value="{{ bus.id }}">
+                        <select name="estado_bus" class="form-select d-inline" style="width: auto;">
+                            {% for estado in estados %}
+                                <option value="{{ estado.id }}" {% if estado.id == bus.estado_bus.id %}selected{% endif %}>{{ estado.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" name="change_status" class="btn btn-warning btn-sm">Cambiar Estado</button>
+                    </form>
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="bus_id" value="{{ bus.id }}">
+                        <button type="submit" name="delete" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<link href="{% static 'css/bus/styleslista.css' %}" rel="stylesheet">
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Parada - Bus Turístico BA{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ parada.nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/parada/styles.css' %}"> 
+</head>
+<body>
+    <div class="parada-container">
+        <div class="parada-header">
+            <h1 class="parada-title">{{ parada.nombre }}</h1>
+            <p class="parada-subtitle">{{ parada.direccion }}</p>
+        </div>
+
+        <div class="parada-content">
+            <div class="parada-image">
+                <img src="{{ parada.imagen.url }}" alt="Imagen de {{ parada.nombre }}" width="600" height="400">
+            </div>
+            <div class="parada-info">
+                <p class="parada-description">
+                    {{ parada.descripcion }}
+                </p>
+            </div>
+        </div>
+
+        <div class="parada-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.0168878895468!2d-58.38352908477038!3d-34.60143688045957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4aa9f0a6da5edb93%3A0x11bead4e234e558b!2sTeatro%20Col%C3%B3n!5e0!3m2!1sen!2sar!4v1623183755118!5m2!1sen!2sar" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+
+        <div class="atractivos-container">
+            <h2>Atractivos</h2>
+            <div class="atractivos-cards">
+                {% for atractivo_x_parada in atractivos %}
+                    <div class="atractivo-card">
+                        <h3>{{ atractivo_x_parada.atractivo.nombre }}</h3>
+                        <p>{{ atractivo_x_parada.atractivo.descripcion }}</p>
+                        <p>Calificación: 
+                            {% for i in "12345" %}
+                                {% if i|add:0 <= atractivo_x_parada.atractivo.calificacion %}
+                                    <span class="star">★</span>
+                                {% else %}
+                                    <span class="star">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
+                {% empty %}
+                    <p>No hay atractivos disponibles para esta parada.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,108 @@
+.dashboard-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.viaje-card {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.viaje-header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.viaje-body {
+    padding: 20px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+}
+
+.info-item i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.info-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.info-item span {
+    font-size: 18px;
+}
+
+.actions-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-action {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.start-btn {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.start-btn:hover {
+    background-color: #3e8e41;
+}
+
+.end-btn {
+    background-color: #FF9800;
+    color: #fff;
+}
+
+.end-btn:hover {
+    background-color: #FFC107;
+}
+
+.status-badge {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.status-badge i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.started {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.ended {
+    background-color: #FF9800;
+    color: #fff;
+}

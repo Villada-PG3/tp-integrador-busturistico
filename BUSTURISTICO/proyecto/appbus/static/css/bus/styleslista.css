@@ -1,0 +1,50 @@
+/* bus.css */
+
+/* Estilos generales para la tabla de buses */
+.table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #e0e0e0;
+    color: rgb(0, 0, 0);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-striped tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para los botones */
+.btn {
+    margin-right: 5px;
+}
+
+/* Estilo para el encabezado de la página */
+h2 {
+    color: #343a40;
+    font-weight: 600;
+}
+
+/* Estilo para el contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Estilo para el formulario de selección de estado */
+.form-select {
+    margin-right: 5px;
+}

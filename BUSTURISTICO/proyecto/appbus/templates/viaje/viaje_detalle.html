@@ -1,0 +1,103 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card shadow-lg">
+                <!-- Header -->
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="card-title mb-0 fw-bold">
+                            <i class="fas fa-bus me-2 text-primary"></i>
+                            Viaje #{{ viaje.id }}
+                        </h2>
+                        <a href="{% url 'viajes' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- Columna Izquierda -->
+                        <div class="col-12 col-md-6">
+                            <!-- Estado y Fecha -->
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="border-bottom pb-2 mb-3">
+                                        <i class="fas fa-info-circle me-2 text-primary"></i>
+                                        Información General
+                                    </h4>
+                                    <div class="mb-3">
+                                        <label class="text-muted mb-1">Estado:</label>
+                                        <div class="estado-badge 
+                                            {% if viaje.marca_fin_viaje_real %}
+                                                bg-success
+                                            {% elif viaje.marca_inicio_viaje_real %}
+                                                bg-warning
+                                            {% else %}
+                                                bg-primary
+                                            {% endif %}">
+                                            <i class="fas fa-circle me-1"></i>
+                                            {{ viaje.estado_viaje.nombre }}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="text-muted mb-1">Fecha:</label>
+                                        <p class="h5">{{ viaje.fecha_viaje }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha -->
+                        <div class="col-12 col-md-6">
+                            <!-- Información del Chofer -->
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="border-bottom pb-2 mb-3">
+                                        <i class="fas fa-user me-2 text-primary"></i>
+                                        Chofer
+                                    </h4>
+                                    <div class="mb-3">
+                                        <label class="text-muted mb-1">Nombre:</label>
+                                        <p class="h5">{{ viaje.chofer.nombre }} {{ viaje.chofer.apellido }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="text-muted mb-1">Legajo:</label>
+                                        <p class="h5">#{{ viaje.chofer.legajo }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del Bus -->
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="border-bottom pb-2 mb-3">
+                                 <i class="fas fa-bus me-2 text-primary"></i>
+                                        Bus
+                                    </h4>
+                                    <div class="mb-3">
+                                        <label class="text-muted mb-1">Patente:</label>
+                                        <p class="h5">{{ viaje.bus.patente }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="text-muted mb-1">Numero de Unidad:</label>
+                                        <p class="h5">{{ viaje.bus.num_unidad }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'css/viaje/stylesdetalle.css' %}">
+{% endblock %}

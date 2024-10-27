@@ -1,0 +1,126 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Chofer - Marca de viajes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="dashboard-container">
+                <h2 class="dashboard-title text-center mb-4">Panel de Control - Viaje Actual</h2>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% if error_message %}
+                    <div class="alert alert-danger">{{ error_message }}</div>
+                {% endif %}
+                
+                {% if viaje %}
+                    <div class="viaje-card">
+                        <div class="viaje-header">
+                            <h3>Detalles del Viaje</h3>
+                        </div>
+                        <div class="viaje-body">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <div>
+                                        <label>Fecha</label>
+                                        <span>{{ viaje.fecha_viaje }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-route"></i>
+                                    <div>
+                                        <label>Recorrido</label>
+                                        <span>{{ viaje.recorrido.nombre }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-bus"></i>
+                                    <div>
+                                        <label>Bus</label>
+                                        <span>Unidad {{ viaje.bus.num_unidad }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i class="far fa-clock"></i>
+                                    <div>
+                                        <label>Inicio Programado</label>
+                                        <span>{{ viaje.horario_inicio_programado }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <div>
+                                        <label>Fin Programado</label>
+                                        <span>{{ viaje.horario_fin_programado }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="actions-container mt-4">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {% if not viaje.marca_inicio_viaje_real %}
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="id" value="{{ viaje.id }}">
+                                                <input type="hidden" name="action" value="inicio">
+                                                <button type="submit" class="btn-action start-btn">
+                                                    <i class="fas fa-play-circle"></i>
+                                                    Empezar Viaje
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <div class="status-badge started">
+                                                <i class="fas fa-check-circle"></i>
+                                                Viaje iniciado a las {{ viaje.marca_inicio_viaje_real }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {% if not viaje.marca_inicio_viaje_real %}
+                                            <button class="btn-action end-btn" disabled>
+                                                <i class="fas fa-stop-circle"></i>
+                                                Finalizar Viaje
+                                            </button>
+                                        {% else %}
+                                            {% if viaje.marca_fin_viaje_real %}
+                                                <div class="status-badge ended">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    Viaje finalizado a las {{ viaje.marca_fin_viaje_real }}
+                                                </div>
+                                            {% else %}
+                                                <form method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="id" value="{{ viaje.id }}">
+                                                    <input type="hidden" name="action" value="final">
+                                                    <button type="submit" class="btn-action end-btn">
+                                                        <i class="fas fa-stop-circle"></i>
+                                                        Finalizar Viaje
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No hay viajes asignados.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/chofer/styles.css'%}">
+{% endblock %}

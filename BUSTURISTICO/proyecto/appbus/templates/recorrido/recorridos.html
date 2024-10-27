@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<section id="recorridos" class="recorridos-container">
+    <h1 class="recorridos-title"><i class="fas fa-route"></i> Descubre Nuestros Recorridos</h1>
+    
+    {% for recorrido in recorridos %}
+    <div class="recorrido-card" style="border-left: 5px solid {{ recorrido.codigo_alfanumerico }};">
+      <h2 class="recorrido-title">{{ recorrido.nombre }}</h2>
+      <div class="recorrido-info">
+        <p><i class="far fa-clock"></i> <span>Frecuencia:</span> Cada {{ recorrido.frecuencia|date:"i" }} minutos</p>
+        <p><i class="far fa-calendar-alt"></i> <span>Horario:</span> {{ recorrido.hora_inicio }} - {{ recorrido.hora_fin }}</p>
+      </div>
+      <p class="recorrido-description">Explora los lugares más emblemáticos con el recorrido {{ recorrido.nombre }}.</p>
+      <a href="{% url 'recorrido_detail' recorrido.id %}" class="recorrido-button">Ver Detalles</a>
+    </div>
+    {% empty %}
+    <p class="no-recorridos">No hay recorridos disponibles en este momento.</p>
+    {% endfor %}
+</section>
+
+<link rel="stylesheet" href="{% static 'css/recorrido/styles.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}

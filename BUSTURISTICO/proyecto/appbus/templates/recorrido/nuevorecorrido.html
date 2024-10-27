@@ -1,0 +1,23 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+
+{% block title %}Nuevo Recorrido - BusTurístico BA{% endblock %}
+
+{% block content %}
+<section class="form-section py-5">
+    <div class="container">
+        <h2 class="text-center font-weight-bold mb-5">Crear Nuevo Recorrido</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success btn-block">Guardar Recorrido</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

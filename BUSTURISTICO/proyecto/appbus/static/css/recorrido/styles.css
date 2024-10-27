@@ -1,0 +1,94 @@
+:root {
+    --primary-color: #ffffff;
+    --secondary-color: #000000;
+    --accent-color: #D4AF37;
+    --text-color: #333333;
+    --gray-color: #f0f0f0;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-color);
+    background-color: var(--primary-color);
+}
+
+.recorridos-container {
+    max-width: 1200px;
+    margin: 100px auto 0;
+    padding: 2rem;
+}
+
+.recorridos-title {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.recorridos-title i {
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+.recorrido-card {
+    background-color: var(--gray-color);
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recorrido-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recorrido-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.recorrido-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.recorrido-info p {
+    margin: 0.5rem 0; }
+
+.recorrido-info i {
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+.recorrido-description {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.recorrido-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.recorrido-button:hover {
+    background-color: #ffc400;
+}
+
+.no-recorridos {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}

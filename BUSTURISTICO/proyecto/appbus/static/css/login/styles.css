@@ -1,0 +1,51 @@
+.login-container {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.card {
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.login-form input {
+    border-radius: 0.5rem;
+}
+
+.btn-primary {
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.form-floating label {
+    color: #6c757d;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #0d6efd;
+}
+
+.alert {
+    border-radius: 0.5rem;
+}
+
+.fa-user-circle {
+    font-size: 4rem;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        margin-top: 2rem;
+        margin-bottom: 2rem; }
+}

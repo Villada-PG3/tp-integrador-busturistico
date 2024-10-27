@@ -1,0 +1,115 @@
+:root {
+    --primary-color: #ffffff;
+    --secondary-color: #333333;
+    --accent-color: #D4AF37;
+    --light-gray: #f5f5f5;
+    --dark-gray: #666666;
+  }
+  
+  .recorrido-section {
+    background-color: var(--light-gray);
+    min-height: 100vh;
+    padding: 4rem 0;
+  }
+  
+  .recorrido-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .recorrido-header {
+    color: var(--primary-color);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recorrido-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recorrido-info {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .recorrido-info i {
+    margin-right: 10px;
+  }
+  
+  .recorrido-description {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+  }
+  
+  .parada-card {
+    background-color: #000000;
+    color: var(--primary-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .parada-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .parada-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border: 2px solid;
+  }
+  
+  .parada-name {
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .parada-description {
+    font-size: 0.9rem;
+    color: #cccccc;
+    margin-bottom: 1rem;
+  }
+  
+  .parada-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+    align-self: flex-start;
+  }
+  
+  .parada-link:hover {
+    opacity: 0.8;
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .no-paradas {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--dark-gray);
+    text-align: center;
+  }

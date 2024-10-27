@@ -83,7 +83,7 @@ class Bus(models.Model):
             raise ValidationError('El número de unidad ya existe.')
 
         # Validar si el estado del bus es 'Habilitado'
-        if self.estado_bus is None or self.estado_bus.nombre != 'Habilitado':
+        if self.pk is None and (self.estado_bus is None or self.estado_bus.nombre != 'Habilitado'):
             raise ValidationError('El bus debe estar habilitado.')
 
     def save(self, *args, **kwargs):

@@ -1,7 +1,7 @@
 :root {
     --primary-color: #ffffff !important;
     --secondary-color: #000000 !important;
-    --accent-color: #D4AF37 !important;
+    --accent-color: #f1c73d !important;
     --text-color: #333333 !important;
     --gray-color: #f0f0f0 !important;
 }
@@ -50,6 +50,11 @@ html {
 
 .navbar li a:hover {
     color: var(--accent-color) !important;
+}
+
+.nav-link:hover{
+
+    color:var(--accent-color)!important;
 }
 
 footer {

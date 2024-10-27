@@ -20,5 +20,6 @@ urlpatterns = [
     path('buses/', BusListView.as_view(), name='buses'),
     path('nuevo-viaje/', CrearViajeView.as_view(), name='crear_viaje'),  # Ruta para crear un nuevo viaje
     path('editar-viaje/<int:pk>/', EditarViajeView.as_view(), name='editar_viaje'),  # Ruta para editar un viaje existente
+    path('reporte-viajes/', ReporteViajesView.as_view(), name='reporte_viajes'),
     
 ]

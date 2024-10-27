@@ -14,6 +14,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.db.models import Avg
+from datetime import datetime
 
 # Create your views here.
 
@@ -94,6 +96,7 @@ class MarcarViajeView(LoginRequiredMixin, TemplateView):
             viaje = viajes_chofer.last()
             print(f"Último viaje encontrado: {viaje}")
             
+            
             context['viaje'] = viaje
             
         except Chofer.DoesNotExist:
@@ -114,8 +117,11 @@ class MarcarViajeView(LoginRequiredMixin, TemplateView):
             action = request.POST.get('action')
 
             fecha_actual = timezone.now().date()
+            tiempo_actual = timezone.localtime(timezone.now()).time()
+            print(f"Fecha actual: {fecha_actual}, Hora actual: {tiempo_actual}")
+            print(f"Fecha programada: {viaje.fecha_viaje}, Hora programada: {viaje.horario_inicio_programado}")
             if action == 'inicio' and not viaje.marca_inicio_viaje_real:
-                if fecha_actual == viaje.fecha_viaje:
+                if fecha_actual == viaje.fecha_viaje and tiempo_actual >= viaje.horario_inicio_programado:
                     viaje.marca_inicio_viaje_real = timezone.now()
                     viaje.estado_viaje = EstadoViaje.objects.get(nombre='En Curso')  # Cambiar el estado a "En Curso"
                     viaje.save()
@@ -123,6 +129,7 @@ class MarcarViajeView(LoginRequiredMixin, TemplateView):
                     messages.error(request, "No puedes iniciar el viaje antes de la fecha programada.")
                 return redirect('marcar_viaje')
             elif action == 'final':
+            
                 
                 if viaje.marca_inicio_viaje_real:  # Verificar que el viaje haya comenzado
                     viaje.marca_fin_viaje_real = timezone.now()
@@ -192,6 +199,18 @@ class EditarViajeView(UpdateView):
     template_name = 'viaje/editar_viaje.html'
     form_class = ViajeForm
     success_url = reverse_lazy('viajes')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Filtra los buses que están habilitados
+        context['buses_habilitados'] = Bus.objects.filter(estado_bus__nombre='Habilitado')  
+        return context
+
+    def form_valid(self, form):
+        viaje = form.save(commit=False)  # No guardamos aún en la base de datos
+        viaje.estado_viaje = EstadoViaje.objects.get(nombre='Por Empezar')  # Establecer el estado predeterminado
+        viaje.save()  # Ahora guardamos el viaje
+        return super().form_valid(form)
 
 
     
@@ -311,3 +330,40 @@ class ChoferController:
         chofer.delete()
     
 
+class ReporteViajesView(TemplateView):
+    template_name = 'reporte/reporte_viajes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fecha_actual = timezone.now().date()
+
+        # Filtrar los viajes del día actual
+        viajes = Viaje.objects.filter(fecha_viaje=fecha_actual)
+
+        # Calcular duración y demora
+        duraciones = []
+        demoras = []
+
+        for viaje in viajes:
+            if viaje.marca_inicio_viaje_real and viaje.marca_fin_viaje_real:
+                viaje.duracion = (viaje.marca_fin_viaje_real - viaje.marca_inicio_viaje_real).total_seconds() / 60  # en minutos
+                duraciones.append(viaje.duracion)
+
+                # Convertir horario_inicio_programado a datetime con zona horaria
+                horario_inicio_programado_dt = timezone.make_aware(datetime.combine(viaje.fecha_viaje, viaje.horario_inicio_programado))
+                viaje.demora = (viaje.marca_inicio_viaje_real - horario_inicio_programado_dt).total_seconds() / 60  # en minutos
+                demoras.append(viaje.demora)
+            else:
+                viaje.duracion = None
+                viaje.demora = None
+
+        # Calcular promedios
+        duracion_promedio = sum(duraciones) / len(duraciones) if duraciones else None
+        demora_promedio = sum(demoras) / len(demoras) if demoras else None
+
+        context['viajes'] = viajes
+        context['promedios'] = {
+            'duracion_promedio': duracion_promedio,
+            'demora_promedio': demora_promedio,
+        }
+        return context

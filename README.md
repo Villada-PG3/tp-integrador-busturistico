@@ -4,13 +4,113 @@ Integrantes Grupo 2:
 - Juan Loza
 - Benicio Manzotti
 - Guido Morero
-  
-El trabajo práctico consiste en crear un proyecto django, en este caso, diseñado para un bus turistico de Buenos Aires. 
 
-Estas deberian ser las funcionalidades que tendria que cumplir el proyecto (en proceso):
-- visualizacion de recorridos, atractivos y paradas del lado del usuario
-- creacion de viajes, reportes diarios del lado del administrador, ademas de poder llevar un registro de los colectivos habilitados y los choferes que esta activos
-- carga de tiempo de viajes de los chofferes y generacion de tickets
+Este proyecto es una aplicación de bus turístico desarrollada en Django, que permite a los usuarios explorar distintos recorridos turísticos en Buenos Aires, asi pudiendo ver los distintos tipos asignados con colores. Cada uno tiene sus distintas paradas, las cuales pueden ser compartidas entre los distintos recorridos, y dentro de cada una se encuentran los atractivos con sus calificaciones. 
+
+## Índice
+
+- [Integrantes del Grupo](#integrantes-del-grupo)
+- [Requisitos Previos](#requisitos-previos)
+- [Descripción del Proyecto](#descripción-del-proyecto)
+- [Instalación](#instalación)
+
+
+## Requisitos Previos
+
+- Python 3.10
+- pipenv
+- MySQL
+
+
+## Instalación
+
+1. **Clonar el repositorio y abrirlo:**
+    ```bash
+    git clone https://github.com/Villada-PG3/tp-integrador-busturistico.git
+    cd tp-integrador-empresa-de-bus-turistico
+    cd BUSTURISTICO
+    ```
+    Una vez clonado el repositorio, meterse en la carpeta de tp-integrador-busturistico y meterse en la carpeta BUSTURISTICO.
+
+2. **Configurar el entorno virtual y las dependencias:**
+    ```bash
+    pipenv install
+    pipenv shell
+    ```
+
+3. **Crear la base de datos en MySQL:**
+   Crear un usuario dedicado (`public_user`) que otros puedan usar para conectarse a la base de datos. 
+
+    - Abrí MySQL en tu terminal:
+      ```bash
+      mysql -u root -p
+      ```
+      Ingresá tus datos
+
+    - Creá la base de datos para el proyecto:
+      ```sql
+      CREATE DATABASE busturistico CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+      ```
+
+    - Crea un usuario de prueba con permisos sobre esta base de datos:
+      ```sql
+      CREATE USER 'public_user'@'localhost' IDENTIFIED BY 'contraseña';
+      GRANT ALL PRIVILEGES ON busturistico.* TO 'public_user'@'localhost';
+      FLUSH PRIVILEGES;
+      GRANT SELECT, LOCK TABLES ON busturistico.* TO 'public_user'@'localhost';
+      FLUSH PRIVILEGES;
+      GRANT PROCESS ON *.* TO 'public_user'@'localhost';
+      FLUSH PRIVILEGES;
+      EXIT;
+      ```
+
+4. **Configurar las variables de entorno en Django:**
+   Configura las variables de entorno de tu aplicación Django para que utilicen la base de datos y el usuario creados. Cambiá estas líneas en tu archivo `settings.py` SI ES QUE NO ESTAN IGUAL:
+
+   Para ello ingresa dentro del archivo proyecto
+    ```bash
+      cd proyecto/
+
+      code .
+    ```
+Ingresar a  Config, ahi deberia encontrar el archivo settings.py, buscar la parte de DATABASES y cambiar las lineas por precausión y guardar (ctrl + s).
+    
+
+    ```python
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'busturistico',
+            'USER': 'public_user',
+            'PASSWORD': 'contraseña',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
+    ```
+
+6. **Migrar las tablas a la base de datos:**
+   Asegúrate de que las migraciones de tu aplicación estén listas y aplícalas para crear la estructura de las tablas en la base de datos:
+
+    ```bash
+    python manage.py migrate
+    ```
+
+7. **Importar datos desde un archivo SQL (opcional):**
+   Hay muestras iniciales en un archivo SQL (`busturistico.sql`), importalos a la base de datos recién creada:
+
+    ```bash
+    mysql -u public_user -p busturistico < path/to/busturistico.sql
+    ```
+
+8. **Ejecutar el servidor:**
+   Ahora podes iniciar el servidor de desarrollo para probar que todo funcione correctamente, el usuario administrador es joacochayle, contraseña jnch1206:
+
+    ```bash
+    python manage.py runserver
+    ```
+
+Con estos pasos, los usuarios podrán configurar y usar la base de datos `busturistico`.
 
 <details>
 <summary>Diagrama ER</summary>

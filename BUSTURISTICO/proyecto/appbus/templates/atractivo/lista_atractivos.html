@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Lista de Atractivos</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Calificación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atractivo in atractivos %}
+            <tr>
+                <td>{{ atractivo.nombre }}</td>
+                <td>{{ atractivo.descripcion }}</td>
+                <td>{{ atractivo.calificacion }}</td>
+                <td>
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="atractivo_id" value="{{ atractivo.id }}">
+                        <button type="submit" name="eliminar" class="btn btn-danger btn-sm" 
+                                onclick="return confirm('¿Está seguro de que desea eliminar este atractivo?');">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay atractivos registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'crear_atractivo' %}" class="btn btn-primary">Crear Nuevo Atractivo</a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/atractivo/lista_atractivos.css' %}">
+{% endblock %}

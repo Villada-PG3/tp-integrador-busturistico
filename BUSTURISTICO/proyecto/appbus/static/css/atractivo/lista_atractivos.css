@@ -1,0 +1,47 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.table {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.table thead {
+    background-color: #f8f9fa;
+}
+
+.table th {
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px;
+}
+
+.table td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.btn-danger {
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    transform: scale(1.05);
+}
+
+.btn-primary {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.alert {
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.alert-dismissible .btn-close {
+    padding: 12px;
+}

@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, ListView, DetailView, View,Create
 import requests
 from typing import Any
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import FormView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .forms import *
@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db.models import Avg
 from datetime import datetime
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -40,6 +41,211 @@ class ParadaDetailView(DetailView):
         context['atractivos'] = AtractivoXParada.objects.filter(parada=self.object).select_related('atractivo')
         return context
     
+#NUEVA VISTA
+class ControladorParada:
+    @staticmethod
+    def crear_parada(data):
+        try:
+            # Validaciones adicionales
+            if Parada.objects.filter(nombre__iexact=data['nombre']).exists():
+                return {
+                    'success': False, 
+                    'error': 'Ya existe una parada con este nombre.'
+                }
+            
+            if Parada.objects.filter(direccion__iexact=data['direccion']).exists():
+                return {
+                    'success': False, 
+                    'error': 'Ya existe una parada en esta dirección.'
+                }
+
+            # Validar que los campos requeridos no estén vacíos
+            if not data['nombre'].strip():
+                return {
+                    'success': False, 
+                    'error': 'El nombre de la parada no puede estar vacío.'
+                }
+
+            if not data['direccion'].strip():
+                return {
+                    'success': False, 
+                    'error': 'La dirección de la parada no puede estar vacía.'
+                }
+
+            # Validar que la descripción tenga un mínimo de caracteres
+            if len(data['descripcion'].strip()) < 10:
+                return {
+                    'success': False, 
+                    'error': 'La descripción debe tener al menos 10 caracteres.'
+                }
+
+            # Validar que se haya seleccionado un tipo de parada
+            if not data.get('tipo_parada'):
+                return {
+                    'success': False, 
+                    'error': 'Debe seleccionar un tipo de parada.'
+                }
+
+            # Si todas las validaciones pasan, crear la parada
+            parada = Parada.objects.create(**data)
+            return {'success': True, 'parada': parada}
+
+        except Exception as e:
+            return {'success': False, 'error': f'Error al crear la parada: {str(e)}'}
+
+    @staticmethod
+    def listar_paradas():
+        """Obtiene todas las paradas ordenadas por nombre"""
+        return Parada.objects.all().order_by('nombre')
+
+    @staticmethod
+    def eliminar_parada(parada_id):
+        """Elimina una parada específica"""
+        try:
+            parada = Parada.objects.get(id=parada_id)
+            nombre_parada = parada.nombre
+            parada.delete()
+            return True, f'La parada "{nombre_parada}" ha sido eliminada.'
+        except Parada.DoesNotExist:
+            return False, 'La parada no existe.'
+        except Exception as e:
+            return False, f'Error al eliminar la parada: {str(e)}'
+
+# Las vistas utilizando el controlador unificado
+class ListaParadasView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    template_name = 'parada/lista_paradas.html'
+    context_object_name = 'paradas'
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return ControladorParada.listar_paradas()
+
+    def post(self, request, *args, **kwargs):
+        if 'eliminar' in request.POST:
+            parada_id = request.POST.get('parada_id')
+            success, message = ControladorParada.eliminar_parada(parada_id)
+            if success:
+                messages.success(request, message)
+            else:
+                messages.error(request, message)
+        return HttpResponseRedirect(reverse_lazy('lista_paradas'))
+
+class CrearParadaView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    template_name = 'parada/crear_parada.html'
+    form_class = ParadaForm
+    success_url = reverse_lazy('lista_paradas')  # Cambiado para redirigir a la lista
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def form_valid(self, form):
+        response = ControladorParada.crear_parada(form.cleaned_data)
+        if response.get('success'):
+            messages.success(self.request, 'Parada creada exitosamente.')
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, response.get('error'))
+            return self.form_invalid(form)
+    
+    
+#NUEVA VISTA
+class GestionParadaRecorridoView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = 'recorrido/gestion_paradas.html'
+    
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get(self, request):
+        context = ControladorParadaRecorrido.obtener_contexto_gestion()
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        resultado = ControladorParadaRecorrido.procesar_peticion(request)
+        if isinstance(resultado, JsonResponse):
+            return resultado
+        return redirect('gestion_paradas')
+
+class ControladorParadaRecorrido:
+    @staticmethod
+    def obtener_contexto_gestion():
+        """Obtiene el contexto necesario para la vista de gestión"""
+        return {
+            'form': OrdenParadaForm(),
+            'paradas': OrdenParada.objects.all().select_related('parada', 'recorrido').order_by('recorrido', 'asignacion_paradas')
+        }
+
+    @staticmethod
+    def procesar_peticion(request):
+        """Procesa las peticiones POST para agregar o eliminar paradas"""
+        if 'agregar' in request.POST:
+            return ControladorParadaRecorrido._procesar_agregar(request)
+        elif 'eliminar' in request.POST:
+            return ControladorParadaRecorrido._procesar_eliminar(request)
+        return None
+
+    @staticmethod
+    def _procesar_agregar(request):
+        """Procesa la petición para agregar una parada"""
+        form = OrdenParadaForm(request.POST)
+        if form.is_valid():
+            try:
+                ControladorParadaRecorrido._validar_orden_parada(form.cleaned_data)
+                orden_parada = form.save()
+                messages.success(request, 'Parada agregada exitosamente al recorrido')
+            except ValidationError as e:
+                messages.error(request, str(e))
+        else:
+            messages.error(request, 'Por favor, corrija los errores en el formulario')
+        return None
+
+    @staticmethod
+    def _procesar_eliminar(request):
+        """Procesa la petición para eliminar una parada"""
+        orden_parada_id = request.POST.get('orden_parada_id')
+        try:
+            orden_parada = OrdenParada.objects.get(id=orden_parada_id)
+            orden_parada.delete()
+            return JsonResponse({'success': True})
+        except OrdenParada.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Parada no encontrada'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    @staticmethod
+    def _validar_orden_parada(data):
+        """Valida los datos de una orden de parada"""
+        if OrdenParada.objects.filter(
+            recorrido=data['recorrido'], 
+            asignacion_paradas=data['asignacion_paradas']
+        ).exists():
+            raise ValidationError('Ya existe una parada con ese orden en este recorrido')    
+
+    
+
+
+class ControladorRecorrido:
+    @staticmethod
+    def obtener_recorrido_y_paradas(recorrido_id):
+        recorrido = get_object_or_404(Recorrido, id=recorrido_id)
+        paradas = OrdenParada.objects.filter(recorrido=recorrido).select_related('parada').order_by('asignacion_paradas')
+        
+        # Procesar el color de las paradas
+        paradas_procesadas = []
+        for orden in paradas:
+            parada_info = {
+                'asignacion_paradas': orden.asignacion_paradas,
+                'parada': orden.parada,
+                'color': '#800080' if orden.parada.tipo_parada.nombre_tipo_parada == 'Parada Compartida' else recorrido.codigo_alfanumerico
+            }
+            paradas_procesadas.append(parada_info)
+            
+        return {
+            'recorrido': recorrido,
+            'paradas': paradas_procesadas
+        }
+
 class RecorridoDetailView(DetailView):
     model = Recorrido
     template_name = 'recorrido/recorrido.html'
@@ -47,34 +253,61 @@ class RecorridoDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Obtener las paradas asociadas a este recorrido
-        context['paradas'] = OrdenParada.objects.filter(recorrido=self.object).select_related('parada').order_by('asignacion_paradas')
+        datos = ControladorRecorrido.obtener_recorrido_y_paradas(self.object.id)
+        context['paradas'] = datos['paradas']
         return context
+
     
+
+
+
+class ControladorRecorridoNuevo:
+    @staticmethod
+    def validar_y_crear_recorrido(data):
+        try:
+            # Validaciones personalizadas
+            if Recorrido.objects.filter(codigo_alfanumerico=data['codigo_alfanumerico']).exists():
+                raise ValidationError('El código alfanumérico ya existe.')
+            
+            if not data['codigo_alfanumerico'].startswith('#'):
+                raise ValidationError('El código alfanumérico debe comenzar con #.')
+
+            
+            if data['hora_fin'] <= data['hora_inicio']:
+                raise ValidationError('La hora de fin debe ser posterior a la hora de inicio.')
+
+            
+            frecuencia = datetime.strptime(str(data['frecuencia']), '%H:%M:%S').time()
+            minutos_frecuencia = frecuencia.hour * 60 + frecuencia.minute
+            if minutos_frecuencia < 5 or minutos_frecuencia > 60:
+                raise ValidationError('La frecuencia debe estar entre 5 y 60 minutos.')
+
+            # Crear el recorrido
+            recorrido = Recorrido.objects.create(**data)
+            return recorrido, None
+
+        except ValidationError as e:
+            return None, str(e)
+        except Exception as e:
+            return None, f"Error inesperado: {str(e)}"
+
 class NuevoRecorridoView(FormView):
     template_name = 'recorrido/nuevorecorrido.html'
     form_class = RecorridoForm
-    success_url = reverse_lazy('recorrido')  
+    success_url = reverse_lazy('recorridos')
 
     def form_valid(self, form):
-        form.save()  
+        data = form.cleaned_data
+        recorrido, error = ControladorRecorridoNuevo.validar_y_crear_recorrido(data)
+        
+        if error:
+            messages.error(self.request, error)
+            return self.form_invalid(form)
+        
+        messages.success(self.request, 'Recorrido creado exitosamente.')
         return super().form_valid(form)
     
-    
-class ChoferLoginView(LoginView):
-    template_name = 'chofer/login.html'
-    form_class = LoginForm
-    redirect_authenticated_user = True
-    
-    def form_valid(self, form):
-        # Guarda el legajo (contraseña original) en la sesión antes de que se hashee
-        legajo = form.cleaned_data['password']
-        response = super().form_valid(form)
-        self.request.session['legajo_chofer'] = legajo
-        return response
 
-    def get_success_url(self):
-        return reverse_lazy('index')
     
 
 class MarcarViajeView(LoginRequiredMixin, TemplateView):
@@ -88,7 +321,7 @@ class MarcarViajeView(LoginRequiredMixin, TemplateView):
             print(f"Legajo en sesión: {legajo}")
             
             chofer = Chofer.objects.get(legajo=legajo)
-            print(f"Chofer encontrado: {chofer}") # Agregamos más información de depuración
+            print(f"Chofer encontrado: {chofer}") 
             
             viajes_chofer = Viaje.objects.filter(chofer=chofer)
             print(f"Viajes del chofer: {viajes_chofer}")
@@ -131,7 +364,7 @@ class MarcarViajeView(LoginRequiredMixin, TemplateView):
             elif action == 'final':
             
                 
-                if viaje.marca_inicio_viaje_real:  # Verificar que el viaje haya comenzado
+                if viaje.marca_inicio_viaje_real:  # Verificar que el viaje comenzo
                     viaje.marca_fin_viaje_real = timezone.now()
                     viaje.estado_viaje = EstadoViaje.objects.get(nombre='Finalizado')
                     viaje.save()
@@ -311,7 +544,65 @@ class ViajeController:
         viaje = Viaje.objects.get(id=viaje_id)
         viaje.delete()
 
+class ChoferLoginView(LoginView):
+    template_name = 'chofer/login.html'
+    form_class = LoginForm
+    redirect_authenticated_user = True
+    
+    def form_valid(self, form):
+        # Guarda el legajo (contraseña original) en la sesión antes de que se hashee
+        legajo = form.cleaned_data['password']
+        response = super().form_valid(form)
+        self.request.session['legajo_chofer'] = legajo
+        return response
 
+    def get_success_url(self):
+        return reverse_lazy('index')
+    
+class ChoferListView(ListView):
+    model = Chofer
+    template_name = 'chofer/choferes.html'  # Nombre del template que vamos a mostrar
+    context_object_name = 'choferes'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ChoferForm()  # Añadimos el formulario al contexto
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if 'delete' in request.POST:  # Verificamos si se solicitó eliminar un chofer
+            chofer_id = request.POST.get('chofer_id')
+            chofer = get_object_or_404(Chofer, id=chofer_id)
+            
+            try:
+                user = User.objects.get(username=f"{chofer.nombre} {chofer.apellido}")
+                user.delete()  # Eliminar el usuario asociado
+            except User.DoesNotExist:
+                messages.error(request, 'El usuario asociado no existe.')
+
+            chofer.delete()  # Eliminar el chofer
+            messages.success(request, 'Chofer eliminado exitosamente.')
+            return redirect('choferes')  # Redirigimos a la misma página
+
+        
+        
+        
+        form = ChoferForm(request.POST)
+        if form.is_valid():
+            chofer = form.save()  # Guardamos el nuevo chofer
+            # Crear el usuario asociado al chofer
+            username = f"{chofer.nombre} {chofer.apellido}"
+            password = str(chofer.legajo)  # Usar el legajo como contraseña
+            user, created = User.objects.get_or_create(username=username)
+            if created:
+                user.set_password(password)  # Establecer la contraseña
+                user.first_name = chofer.nombre
+                user.last_name = chofer.apellido
+                user.is_staff = True  # Dar permisos de staff
+                user.save()  # Guardar el usuario
+            messages.success(request, 'Chofer agregado exitosamente.')
+            return redirect('choferes')  # Redirigimos a la misma página
+        return self.get(request, *args, **kwargs)  
 
 class ChoferController:
     @staticmethod
@@ -330,40 +621,197 @@ class ChoferController:
         chofer.delete()
     
 
+
+    
 class ReporteViajesView(TemplateView):
     template_name = 'reporte/reporte_viajes.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        controlador = ControladorReporteViajes()
+        context.update(controlador.generar_reporte())
+        return context
+
+class ControladorReporteViajes:
+    def generar_reporte(self):
         fecha_actual = timezone.now().date()
-
-        # Filtrar los viajes del día actual
         viajes = Viaje.objects.filter(fecha_viaje=fecha_actual)
+        
+        # Debug: imprimir cantidad de viajes encontrados
+        print(f"Viajes encontrados para {fecha_actual}: {viajes.count()}")
+        
+        viajes_procesados = self._procesar_viajes(viajes)
+        promedios = self._calcular_promedios(viajes_procesados)
+        
+        # Debug: imprimir viajes procesados
+        print(f"Viajes procesados: {viajes_procesados}")
+        
+        return {
+            'viajes': viajes_procesados,
+            'promedios': promedios,
+            'today': fecha_actual,  # Agregamos la fecha al contexto
+        }
 
-        # Calcular duración y demora
-        duraciones = []
-        demoras = []
-
+    def _procesar_viajes(self, viajes):
+        viajes_procesados = []
         for viaje in viajes:
-            if viaje.marca_inicio_viaje_real and viaje.marca_fin_viaje_real:
-                viaje.duracion = (viaje.marca_fin_viaje_real - viaje.marca_inicio_viaje_real).total_seconds() / 60  # en minutos
-                duraciones.append(viaje.duracion)
+            viaje_procesado = self._procesar_viaje(viaje)
+            viajes_procesados.append(viaje_procesado)
+        return viajes_procesados
 
-                # Convertir horario_inicio_programado a datetime con zona horaria
-                horario_inicio_programado_dt = timezone.make_aware(datetime.combine(viaje.fecha_viaje, viaje.horario_inicio_programado))
-                viaje.demora = (viaje.marca_inicio_viaje_real - horario_inicio_programado_dt).total_seconds() / 60  # en minutos
-                demoras.append(viaje.demora)
-            else:
-                viaje.duracion = None
-                viaje.demora = None
+    def _procesar_viaje(self, viaje):
+        if viaje.marca_inicio_viaje_real and viaje.marca_fin_viaje_real:
+            duracion = (viaje.marca_fin_viaje_real - viaje.marca_inicio_viaje_real).total_seconds() / 60
+            horario_inicio_programado_dt = timezone.make_aware(datetime.combine(viaje.fecha_viaje, viaje.horario_inicio_programado))
+            demora = (viaje.marca_inicio_viaje_real - horario_inicio_programado_dt).total_seconds() / 60
+        else:
+            duracion = None
+            demora = None
 
-        # Calcular promedios
+        return {
+            'viaje': viaje,
+            'duracion': duracion,
+            'demora': demora
+        }
+
+    def _calcular_promedios(self, viajes_procesados):
+        duraciones = [v['duracion'] for v in viajes_procesados if v['duracion'] is not None]
+        demoras = [v['demora'] for v in viajes_procesados if v['demora'] is not None]
+
         duracion_promedio = sum(duraciones) / len(duraciones) if duraciones else None
         demora_promedio = sum(demoras) / len(demoras) if demoras else None
 
-        context['viajes'] = viajes
-        context['promedios'] = {
+        return {
             'duracion_promedio': duracion_promedio,
             'demora_promedio': demora_promedio,
         }
+        
+class ControladorAtractivo:
+    @staticmethod
+    def crear_atractivo(data):
+        try:
+            # Validaciones adicionales si son necesarias
+            if Atractivo.objects.filter(nombre__iexact=data['nombre']).exists():
+                raise ValidationError('Ya existe un atractivo con este nombre.')
+
+            atractivo = Atractivo.objects.create(**data)
+            return {'success': True, 'atractivo': atractivo}
+        except Exception as e:
+            return {'success': False, 'error': str(e)}
+
+    @staticmethod
+    def listar_atractivos():
+        return Atractivo.objects.all().order_by('nombre')
+
+    @staticmethod
+    def eliminar_atractivo(atractivo_id):
+        try:
+            atractivo = Atractivo.objects.get(id=atractivo_id)
+            nombre = atractivo.nombre
+            atractivo.delete()
+            return True, f'El atractivo "{nombre}" ha sido eliminado.'
+        except Atractivo.DoesNotExist:
+            return False, 'El atractivo no existe.'
+        except Exception as e:
+            return False, f'Error al eliminar el atractivo: {str(e)}'
+
+class ListaAtractivosView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    template_name = 'atractivo/lista_atractivos.html'
+    context_object_name = 'atractivos'
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return ControladorAtractivo.listar_atractivos()
+
+    def post(self, request, *args, **kwargs):
+        if 'eliminar' in request.POST:
+            atractivo_id = request.POST.get('atractivo_id')
+            success, message = ControladorAtractivo.eliminar_atractivo(atractivo_id)
+            if success:
+                messages.success(request, message)
+            else:
+                messages.error(request, message)
+        return redirect('lista_atractivos')
+
+class CrearAtractivoView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    template_name = 'atractivo/crear_atractivo.html'
+    form_class = AtractivoForm
+    success_url = reverse_lazy('lista_atractivos')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def form_valid(self, form):
+        response = ControladorAtractivo.crear_atractivo(form.cleaned_data)
+        if response['success']:
+            messages.success(self.request, 'Atractivo creado exitosamente.')
+            return HttpResponseRedirect(self.success_url)
+        else:
+            messages.error(self.request, response['error'])
+            return self.form_invalid(form)
+
+class ControladorAtractivoXParada:
+    @staticmethod
+    def obtener_contexto_gestion():
+        return {
+            'form': AtractivoXParadaForm(),
+            'asignaciones': AtractivoXParada.objects.all().select_related('parada', 'atractivo')
+        }
+
+    @staticmethod
+    def agregar_atractivo_a_parada(data):
+        try:
+            asignacion = AtractivoXParada.objects.create(**data)
+            return True, 'Atractivo asignado exitosamente a la parada.'
+        except Exception as e:
+            return False, str(e)
+
+    @staticmethod
+    def eliminar_asignacion(asignacion_id):
+        try:
+            asignacion = AtractivoXParada.objects.get(id=asignacion_id)
+            asignacion.delete()
+            return True, 'Asignación eliminada exitosamente.'
+        except AtractivoXParada.DoesNotExist:
+            return False, 'La asignación no existe.'
+        except Exception as e:
+            return False, str(e)
+
+class GestionAtractivosParadaView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = 'atractivo/gestion_atractivos_parada.html'
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get(self, request):
+        context = ControladorAtractivoXParada.obtener_contexto_gestion()
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        if 'agregar' in request.POST:
+            form = AtractivoXParadaForm(request.POST)
+            if form.is_valid():
+                success, message = ControladorAtractivoXParada.agregar_atractivo_a_parada(form.cleaned_data)
+                if success:
+                    messages.success(request, message)
+                else:
+                    messages.error(request, message)
+            else:
+                messages.error(request, 'Por favor, corrija los errores en el formulario.')
+        elif 'eliminar' in request.POST:
+            asignacion_id = request.POST.get('asignacion_id')
+            success, message = ControladorAtractivoXParada.eliminar_asignacion(asignacion_id)
+            if success:
+                messages.success(request, message)
+            else:
+                messages.error(request, message)
+        
+        return redirect('gestion_atractivos_parada')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = AtractivoXParadaForm()
+        context['asignaciones'] = AtractivoXParada.objects.select_related('parada', 'atractivo').all()
         return context

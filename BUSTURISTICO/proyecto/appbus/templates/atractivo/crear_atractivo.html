@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}Nuevo Recorrido - BusTurístico BA{% endblock %}
+{% block title %}Crear Atractivo - BusTurístico BA{% endblock %}
 
 {% block content %}
 <section class="form-section py-5">
@@ -10,7 +10,7 @@
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header bg-dark text-white">
-                        <h2 class="text-center mb-0">Crear Nuevo Recorrido</h2>
+                        <h2 class="text-center mb-0">Crear Nuevo Atractivo</h2>
                     </div>
                     <div class="card-body">
                         {% if messages %}
@@ -44,9 +44,9 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save me-2"></i>Guardar Recorrido
+                                    <i class="fas fa-save me-2"></i>Guardar Atractivo
                                 </button>
-                                <a href="{% url 'recorridos' %}" class="btn btn-secondary">
+                                <a href="{% url 'lista_atractivos' %}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left me-2"></i>Volver
                                 </a>
                             </div>
@@ -57,13 +57,8 @@
         </div>
     </div>
 </section>
-
 {% endblock %}
+
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/recorrido/stylesagregar.css' %}">
+<link rel="stylesheet" href="{% static 'css/atractivo/crear_atractivo.css' %}">
 {% endblock %}
-{% block extra_js %}
-    <script src="{% static 'js/recorrido.js' %}"></script>
-{% endblock %}
-
-

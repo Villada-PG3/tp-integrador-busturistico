@@ -19,10 +19,11 @@
       {% for orden in paradas %}
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="parada-card">
-          <div class="parada-number" style="border-color: {{ recorrido.codigo_alfanumerico }};">{{ orden.asignacion_paradas }}</div>
+          <div class="parada-number" style="border-color: {{ orden.color }};">{{ orden.asignacion_paradas }}</div>
           <h3 class="parada-name">{{ orden.parada.nombre }}</h3>
           <p class="parada-description">{{ orden.parada.descripcion|slice:":100" }}...</p>
-          <a href="{% url 'parada_detail' orden.parada.id %}" class="parada-link" style="background-color: {{ recorrido.codigo_alfanumerico }};">
+          <a href="{% url 'parada_detail' orden.parada.id %}" class="parada-link"
+            style="background-color: {{ orden.color }};">
             Ver más <i class="fas fa-chevron-right"></i>
           </a>
         </div>

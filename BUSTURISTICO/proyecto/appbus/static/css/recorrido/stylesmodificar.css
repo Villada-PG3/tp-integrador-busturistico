@@ -1,0 +1,17 @@
+.container {
+    margin-top: 2rem;
+}
+
+h2, h3 {
+    margin-bottom: 1rem;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-danger {
+    font-size: 0.8rem;
+}

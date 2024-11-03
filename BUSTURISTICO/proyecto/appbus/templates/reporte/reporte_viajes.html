@@ -28,22 +28,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for viaje in viajes %}
+                        {% if viajes %}
+                            {% for viaje_info in viajes %}
+                                <tr>
+                                    <td>{{ viaje_info.viaje.id }}</td>
+                                    <td>{{ viaje_info.viaje.chofer }}</td>
+                                    <td>{{ viaje_info.viaje.bus }}</td>
+                                    <td>{{ viaje_info.duracion|default:"N/A"|floatformat:2 }}</td>
+                                    <td>{{ viaje_info.demora|default:"N/A"|floatformat:2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
                             <tr>
-                                <td>{{ viaje.id }}</td>
-                                <td>{{ viaje.chofer }}</td>
-                                <td>{{ viaje.bus }}</td>
-                                <td>{{ viaje.duracion|default:"N/A" }}</td>
-                                <td>{{ viaje.demora|default:"N/A" }}</td>
+                                <td colspan="5" class="text-center">No hay viajes para mostrar</td>
                             </tr>
-                        {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
     
             <h2 class="mt-4">Promedios</h2>
-            <p>Duración Promedio: <strong>{{ promedios.duracion_promedio|default:"N/A" }} min</strong></p>
-            <p>Demora Promedio: <strong>{{ promedios.demora_promedio|default:"N/A" }} min</strong></p>
+            <p>Duración Promedio: <strong>{{ promedios.duracion_promedio|default:"N/A"|floatformat:2  }} min</strong></p>
+            <p>Demora Promedio: <strong>{{ promedios.demora_promedio|default:"N/A"|floatformat:2  }} min</strong></p>
         </div>
     </body>
 </html>

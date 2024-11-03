@@ -22,8 +22,8 @@ html {
     width: 100% !important;
     top: 0 !important;
     z-index: 1000 !important;
-    overflow: hidden; /* Evita el desbordamiento */
-    white-space: nowrap; /* Evita que el contenido se divida en múltiples líneas */
+    overflow: hidden; 
+    white-space: nowrap; 
 }
 
 .navbarra ul {
@@ -79,4 +79,32 @@ footer {
 .social-icons a:hover {
     color: var(--accent-color);
 }
+.dropdown-menu {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--accent-color);
+}
 
+.dropdown-item {
+    color: var(--primary-color) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--secondary-color);
+    color: var(--secondary-color) !important;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--accent-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--gray-color);
+    border-color: var(--accent-color);
+    color: var(--secondary-color);
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--accent-color);
+}

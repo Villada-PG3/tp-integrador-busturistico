@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import EstadoBus, EstadoViaje, Recorrido, Parada, TipoParada, Atractivo, AtractivoXParada, OrdenParada, Bus, Chofer, Viaje
+from .models import *
 from django.contrib.auth.models import User
 
 
+
+    
 class BusAdmin(admin.ModelAdmin):
     search_fields = ('patente', 'num_unidad')  
     list_display = ('patente', 'num_unidad', 'fecha_compra')  

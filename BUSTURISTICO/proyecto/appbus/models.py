@@ -1,5 +1,4 @@
 
-
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -115,5 +114,3 @@ class Viaje(models.Model):
 
     def __str__(self):
         return f'Viaje {self.id} - {self.recorrido.nombre}'
-
-

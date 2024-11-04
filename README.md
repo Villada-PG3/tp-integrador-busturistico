@@ -112,6 +112,11 @@ Ingresar a  Config, ahi deberia encontrar el archivo settings.py, buscar la part
 
 Con estos pasos, los usuarios podrán configurar y usar la base de datos `busturistico`.
 
+---
+
+A continuacion la presentacion del proyecto [aqui.](https://www.canva.com/design/DAGU3IV5P-M/LEJ5PI1A-aX7SgZvf09yeg/view?utm_content=DAGU3IV5P-M&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+
+---
 <details>
 <summary>Diagrama ER</summary>
 

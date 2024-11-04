@@ -407,7 +407,6 @@ class ViajeDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         viaje = self.object
-        # Aquí puedes agregar más contexto si lo necesitas
         return context
     
 class CrearViajeView(FormView):

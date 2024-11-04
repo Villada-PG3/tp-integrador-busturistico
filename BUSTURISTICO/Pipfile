@@ -8,6 +8,7 @@ requests = "*"
 mysqlclient = "*"
 pillow = "*"
 django = "*"
+django-jazzmin = "*"
 
 [dev-packages]
 

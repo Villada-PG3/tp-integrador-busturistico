@@ -96,11 +96,11 @@ Ingresar a  Config, ahi deberia encontrar el archivo settings.py, buscar la part
     python manage.py migrate
     ```
 
-7. **Importar datos desde un archivo SQL (opcional):**
-   Hay muestras iniciales en un archivo SQL (`busturistico.sql`), importalos a la base de datos recién creada:
+7. **Importar datos desde un archivo SQL:**
+   Hay muestras iniciales, importalos a la base de datos recién creada:
 
     ```bash
-    mysql -u public_user -p busturistico < path/to/busturistico.sql
+    python manage.py loaddata > db.json
     ```
 
 8. **Ejecutar el servidor:**
@@ -227,3 +227,4 @@ erDiagram
 
 ```
 </details>
+

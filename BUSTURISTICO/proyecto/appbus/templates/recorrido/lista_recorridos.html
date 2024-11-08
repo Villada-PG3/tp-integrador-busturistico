@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Lista de Recorridos</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Código Alfanumérico</th>
+                <th>Hora de Inicio</th>
+                <th>Hora de Fin</th>
+                <th>Frecuencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recorrido in recorridos %}
+            <tr>
+                <td>{{ recorrido.nombre }}</td>
+                <td>{{ recorrido.codigo_alfanumerico }}</td>
+                <td>{{ recorrido.hora_inicio }}</td>
+                <td>{{ recorrido.hora_fin }}</td>
+                <td>{{ recorrido.frecuencia }}</td>
+                <td>
+                    <form method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="recorrido_id" value="{{ recorrido.id }}">
+                        <button type="submit" name="eliminar" class="btn btn-danger">Eliminar</button>
+                    </form>
+                    <a href="{% url 'recorrido_detail' recorrido.id %}" class="btn btn-primary">Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/parada/lista_paradas.css' %}">
+{% endblock %}

@@ -28,5 +28,5 @@ urlpatterns = [
     path('atractivos/', ListaAtractivosView.as_view(), name='lista_atractivos'),
     path('atractivo/crear/', CrearAtractivoView.as_view(), name='crear_atractivo'),
     path('atractivo/gestion-paradas/', GestionAtractivosParadaView.as_view(), name='gestion_atractivos_parada'),
-    
+    path('recorridos/lista/', ListaRecorridosView.as_view(), name='lista_recorridos'),
 ]

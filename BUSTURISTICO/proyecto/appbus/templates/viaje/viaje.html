@@ -14,25 +14,6 @@
             <div class="filters mb-3">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-3">
-                        <label class="form-label text-muted">Estado</label>
-                        <select class="form-select" id="estadoFilter">
-                            <option value="">Todos los estados</option>
-                            <option value="en_curso">En curso</option>
-                            <option value="finalizado">Finalizados</option>
-                            <option value="programado">Programados</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label text-muted">Fecha</label>
-                        <input type="date" class="form-control" id="fechaFilter">
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary w-100" id="aplicarFiltros">
-                            <i class="fas fa-filter me-2"></i>
-                            Aplicar Filtros
-                        </button>
-                    </div>
-                    <div class="col-md-3">
                         <a href="{% url 'crear_viaje' %}" class="btn btn-primary">
                             <i class="fas fa-plus me-1"></i>
                             Crear Nuevo Viaje

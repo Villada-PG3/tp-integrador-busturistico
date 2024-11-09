@@ -227,3 +227,142 @@ erDiagram
 
 ```
 </details>
+
+<details>
+<summary>Diagrama UML</summary>
+```mermaid
+
+classDiagram
+    
+    Viaje "1" --> "1" Recorrido : ejecuta
+    
+    class Recorrido {
+        +varchar nombre
+        +varchar codigo_alfanumerico
+        +Time hora_inicio
+        +Time hora_fin
+        +Time frecuencia
+        +iniciarRecorrido(): void
+        +finalizarRecorrido(): void
+        +ver_detalles(): void
+        +mostrar_recorridos(): void
+    }
+
+    Recorrido "1" --> "0..*" Orden_parada : tiene
+
+    Chofer "1" --> "1" Viaje : realiza
+    
+    class Viaje {
+        +int id_viaje
+        +int legajo
+        +int num_unidad 
+        +varchar codigo_alfanumerico 
+        +int id_estadoV 
+        +time horario_inicio_programado
+        +time horario_fin_programado
+        +date fecha_viaje
+        +datetime marca_inicio_viaje_real
+        +datetime marca_fin_viaje_real
+        +iniciarViaje(): void
+        +finalizarViaje(): void
+        +generarTicket(): varchar
+        +ver_detalles(): void
+    }
+
+    Viaje "1" --> "1" EstadoViaje : tienen
+    
+    class EstadoViaje {
+        +int id_estadoV
+        +varchar nombre
+        +varchar descripcion
+        +mostrar_estadoV(): void
+        ++cambiar_estadoV(): void
+        +get()
+        +set()
+    }
+    
+    Viaje "1" --> "1" Bus : se_asigna
+    
+    class Chofer {
+        +int legajo
+        +varchar nombre
+        +varchar apellido
+        +realizarViaje(Viaje): void
+    }
+    
+    
+    class Bus {
+        +varchar patente
+        +int num_unidad
+        +date fecha_de_compra
+        int id_estadoB
+        +darDeAlta(): void
+        +inhabilitar(): void
+    }
+    
+    Bus "1" --> "1" EstadoBus : tienen
+    
+    class EstadoBus {
+        +int id_estadoB
+        +varchar nombre
+        +varchar descripcion
+        +mostrar_estadoB(): void
+        +cambiar_estadoB()
+
+    }
+    
+    
+    Parada "1" --> "1" Tipo_parada : tiene
+
+    
+    class Tipo_parada {
+        +int id_tipo_parada
+        +varchar nombre_tipo_parada
+        +varchar descripcion
+        +mostrar_paradas_tipo(): void
+    }
+
+     class Parada {
+        +int idParada
+        +varchar nombre
+        +varchar direccion
+        +varchar descripcion
+        +longblob imagen
+        +mostrarInfo(): void
+    }
+
+    Parada "1" --> "0..*" Atractivoxparada : tiene
+    Parada "1" --> "0..*" Orden_parada : esta
+    
+    
+    class Atractivoxparada {
+        +int id_Atractivoxparada
+        +int id_atractivo
+        +int id_parada
+        +detalles_atractivo(): str
+    }
+
+    Atractivoxparada "1" --> "1" Atractivo : pertenece
+  
+    
+    class Atractivo {
+        +int id_atractivo
+        +varchar nombre
+        +varchar descripcion
+        +float calificacion
+        +mostrarInfo(): void
+        +califcar(): void
+    }
+    
+    
+    class Orden_parada {
+        +int id_orden_parada
+        +int asignacion_paradas
+        +int id_parada
+        +int codigo_alfanumerico
+        +mostrarParada(): void
+    }
+
+
+```
+</details>

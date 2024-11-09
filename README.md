@@ -230,6 +230,7 @@ erDiagram
 
 <details>
 <summary>Diagrama UML</summary>
+
 ```mermaid
 
 classDiagram

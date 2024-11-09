@@ -244,10 +244,10 @@ classDiagram
         +Time hora_inicio
         +Time hora_fin
         +Time frecuencia
-        +iniciarRecorrido(): void
-        +finalizarRecorrido(): void
-        +ver_detalles(): void
-        +mostrar_recorridos(): void
+        +iniciarRecorrido() 
+        +finalizarRecorrido() 
+        +ver_detalles()
+        +mostrar_recorridos()
     }
 
     Recorrido "1" --> "0..*" Orden_parada : tiene
@@ -265,10 +265,10 @@ classDiagram
         +date fecha_viaje
         +datetime marca_inicio_viaje_real
         +datetime marca_fin_viaje_real
-        +iniciarViaje(): void
-        +finalizarViaje(): void
+        +iniciarViaje()
+        +finalizarViaje()
         +generarTicket(): varchar
-        +ver_detalles(): void
+        +ver_detalles()
     }
 
     Viaje "1" --> "1" EstadoViaje : tienen
@@ -277,8 +277,8 @@ classDiagram
         +int id_estadoV
         +varchar nombre
         +varchar descripcion
-        +mostrar_estadoV(): void
-        ++cambiar_estadoV(): void
+        +mostrar_estadoV()
+        ++cambiar_estadoV()
         +get()
         +set()
     }
@@ -289,7 +289,7 @@ classDiagram
         +int legajo
         +varchar nombre
         +varchar apellido
-        +realizarViaje(Viaje): void
+        +realizarViaje(Viaje)
     }
     
     
@@ -298,8 +298,8 @@ classDiagram
         +int num_unidad
         +date fecha_de_compra
         int id_estadoB
-        +darDeAlta(): void
-        +inhabilitar(): void
+        +darDeAlta()
+        +inhabilitar()
     }
     
     Bus "1" --> "1" EstadoBus : tienen
@@ -308,7 +308,7 @@ classDiagram
         +int id_estadoB
         +varchar nombre
         +varchar descripcion
-        +mostrar_estadoB(): void
+        +mostrar_estadoB()
         +cambiar_estadoB()
 
     }
@@ -321,7 +321,7 @@ classDiagram
         +int id_tipo_parada
         +varchar nombre_tipo_parada
         +varchar descripcion
-        +mostrar_paradas_tipo(): void
+        +mostrar_paradas_tipo()
     }
 
      class Parada {
@@ -330,7 +330,7 @@ classDiagram
         +varchar direccion
         +varchar descripcion
         +longblob imagen
-        +mostrarInfo(): void
+        +mostrarInfo()
     }
 
     Parada "1" --> "0..*" Atractivoxparada : tiene
@@ -352,8 +352,8 @@ classDiagram
         +varchar nombre
         +varchar descripcion
         +float calificacion
-        +mostrarInfo(): void
-        +califcar(): void
+        +mostrarInfo()
+        +califcar()
     }
     
     
@@ -362,7 +362,7 @@ classDiagram
         +int asignacion_paradas
         +int id_parada
         +int codigo_alfanumerico
-        +mostrarParada(): void
+        +mostrarParada()
     }
 
 

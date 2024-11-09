@@ -238,6 +238,7 @@ classDiagram
     Viaje "1" --> "1" Recorrido : ejecuta
     
     class Recorrido {
+    <<Modelo>>
         +varchar nombre
         +varchar codigo_alfanumerico
         +Time hora_inicio

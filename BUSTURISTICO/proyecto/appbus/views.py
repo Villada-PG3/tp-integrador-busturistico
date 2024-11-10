@@ -27,28 +27,7 @@ class BaseView(TemplateView):
     template_name = 'base/base.html'
     
 
-class ListaRecorridosView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    template_name = 'recorrido/lista_recorridos.html'   
-    context_object_name = 'recorridos'
 
-    def test_func(self):
-        return self.request.user.is_superuser
-
-    def get_queryset(self):
-        return Recorrido.objects.all().order_by('nombre')  
-
-    def post(self, request, *args, **kwargs):
-        if 'eliminar' in request.POST:  
-            recorrido_id = request.POST.get('recorrido_id')
-            recorrido = get_object_or_404(Recorrido, id=recorrido_id)
-            recorrido.delete()
-            messages.success(request, 'Recorrido eliminado exitosamente.')
-            return redirect('lista_recorridos')  
-
-class RecorridoListView(ListView):
-    model = Recorrido
-    template_name = 'recorrido/recorridos.html'
-    context_object_name = 'recorridos'
     
 class ParadaDetailView(DetailView):
     model = Parada
@@ -116,21 +95,14 @@ class ControladorParada:
     def listar_paradas():
         """Obtiene todas las paradas ordenadas por nombre"""
         return Parada.objects.all().order_by('nombre')
+        
 
     @staticmethod
     def eliminar_parada(parada_id):
-        """Elimina una parada específica"""
-        try:
-            parada = Parada.objects.get(id=parada_id)
-            nombre_parada = parada.nombre
-            parada.delete()
-            return True, f'La parada "{nombre_parada}" ha sido eliminada.'
-        except Parada.DoesNotExist:
-            return False, 'La parada no existe.'
-        except Exception as e:
-            return False, f'Error al eliminar la parada: {str(e)}'
+        parada=Parada.objects.filter(id=parada_id).first()
+        parada.eliminar_parada(parada_id)
 
-# Las vistas utilizando el controlador unificado
+
 class ListaParadasView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     template_name = 'parada/lista_paradas.html'
     context_object_name = 'paradas'
@@ -144,11 +116,8 @@ class ListaParadasView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def post(self, request, *args, **kwargs):
         if 'eliminar' in request.POST:
             parada_id = request.POST.get('parada_id')
-            success, message = ControladorParada.eliminar_parada(parada_id)
-            if success:
-                messages.success(request, message)
-            else:
-                messages.error(request, message)
+            ControladorParada.eliminar_parada(parada_id)
+            
         return HttpResponseRedirect(reverse_lazy('lista_paradas'))
 
 class CrearParadaView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -277,7 +246,28 @@ class RecorridoDetailView(DetailView):
         return context
 
     
+class ListaRecorridosView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    template_name = 'recorrido/lista_recorridos.html'   
+    context_object_name = 'recorridos'
 
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return Recorrido.objects.all().order_by('nombre')  
+
+    def post(self, request, *args, **kwargs):
+        if 'eliminar' in request.POST:  
+            recorrido_id = request.POST.get('recorrido_id')
+            recorrido = get_object_or_404(Recorrido, id=recorrido_id)
+            recorrido.delete()
+            messages.success(request, 'Recorrido eliminado exitosamente.')
+            return redirect('lista_recorridos')  
+
+class RecorridoListView(ListView):
+    model = Recorrido
+    template_name = 'recorrido/recorridos.html'
+    context_object_name = 'recorridos'
 
 
 class ControladorRecorridoNuevo:

@@ -37,6 +37,19 @@ class Parada(models.Model):
     def __str__(self):
         return self.nombre
 
+    @staticmethod
+    def eliminar_parada(parada_id):
+        """Elimina una parada específica"""
+        try:
+            parada = Parada.objects.get(id=parada_id)
+            nombre_parada = parada.nombre
+            parada.delete()
+            return True, f'La parada "{nombre_parada}" ha sido eliminada.'
+        except Parada.DoesNotExist:
+            return False, 'La parada no existe.'
+        except Exception as e:
+            return False, f'Error al eliminar la parada: {str(e)}'
+
 class TipoParada(models.Model):
     nombre_tipo_parada = models.CharField(max_length=100)
     descripcion = models.TextField()

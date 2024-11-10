@@ -26,6 +26,25 @@ class IndexView(TemplateView):
 class BaseView(TemplateView):
     template_name = 'base/base.html'
     
+
+class ListaRecorridosView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    template_name = 'recorrido/lista_recorridos.html'   
+    context_object_name = 'recorridos'
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return Recorrido.objects.all().order_by('nombre')  
+
+    def post(self, request, *args, **kwargs):
+        if 'eliminar' in request.POST:  
+            recorrido_id = request.POST.get('recorrido_id')
+            recorrido = get_object_or_404(Recorrido, id=recorrido_id)
+            recorrido.delete()
+            messages.success(request, 'Recorrido eliminado exitosamente.')
+            return redirect('lista_recorridos')  
+
 class RecorridoListView(ListView):
     model = Recorrido
     template_name = 'recorrido/recorridos.html'
@@ -135,7 +154,7 @@ class ListaParadasView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class CrearParadaView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = 'parada/crear_parada.html'
     form_class = ParadaForm
-    success_url = reverse_lazy('lista_paradas')  # Cambiado para redirigir a la lista
+    success_url = reverse_lazy('lista_paradas')
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -144,7 +163,7 @@ class CrearParadaView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         response = ControladorParada.crear_parada(form.cleaned_data)
         if response.get('success'):
             messages.success(self.request, 'Parada creada exitosamente.')
-            return super().form_valid(form)
+            return HttpResponseRedirect(self.success_url)  # Redirigir directamente
         else:
             messages.error(self.request, response.get('error'))
             return self.form_invalid(form)
@@ -479,17 +498,15 @@ class CrearBusView(CreateView):
     success_url = reverse_lazy('buses')
 
     def form_valid(self, form):
+        bus = form.save(commit=False)
+        estado_habilitado = EstadoBus.objects.get(nombre='Habilitado')
+        bus.estado_bus = estado_habilitado
         messages.success(self.request, 'Bus creado con éxito')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        # Aquí puedes agregar un mensaje de error si lo deseas
         messages.error(self.request, 'Por favor corrige los errores en el formulario.')
         return super().form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
     
     
 class BusController:
@@ -506,10 +523,6 @@ class BusController:
         if Bus.objects.filter(num_unidad=num_unidad).exists():
             raise ValueError('El número de unidad ya existe.')
 
-        # Validar si el estado del bus es 'Habilitado'
-        estado_bus = data.get('estado_bus')
-        if estado_bus is None or estado_bus.nombre != 'Habilitado':
-            raise ValueError('El bus debe estar habilitado.')
 
         # Crear y guardar el bus
         bus = Bus(**data)

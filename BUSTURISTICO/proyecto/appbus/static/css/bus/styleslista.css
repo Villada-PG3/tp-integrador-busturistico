@@ -1,50 +1,146 @@
-/* bus.css */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f7f8fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
 
-/* Estilos generales para la tabla de buses */
+h2 {
+    color: #343a40;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
 .table {
     margin-top: 20px;
     border-collapse: collapse;
     width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .table th, .table td {
-    padding: 12px;
+    padding: 15px;
     text-align: left;
-    border: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+    font-size: 1rem;
 }
 
 .table th {
-    background-color: #e0e0e0;
-    color: rgb(0, 0, 0);
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f9f9f9;
 }
 
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
 .table-striped tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e6f2ff;
+    transition: background-color 0.3s ease;
 }
 
-/* Estilos para los botones */
-.btn {
-    margin-right: 5px;
+.table tbody td {
+    color: #333333;
+    text-align: center;
 }
 
-/* Estilo para el encabezado de la página */
-h2 {
-    color: #343a40;
+.table td a {
+    color: #007bff;
+    text-decoration: none;
     font-weight: 600;
+    transition: color 0.3s ease;
 }
 
-/* Estilo para el contenedor principal */
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
+.table td a:hover {
+    color: #0056b3;
 }
 
-/* Estilo para el formulario de selección de estado */
+.table td button {
+    margin-right: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.table td .btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+}
+
+.table td .btn-danger:hover {
+    background-color: #c82333;
+}
+
+.table td .btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+}
+
+.table td .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.table td .btn-warning {
+    background-color: #ffc107;
+    color: #343a40;
+    border: none;
+}
+
+.table td .btn-warning:hover {
+    background-color: #e0a800;
+}
+
 .form-select {
-    margin-right: 5px;
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.9rem;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    color: #495057;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+.form-select:hover {
+    border-color: #007bff;
+}
+
+.mt-5 {
+    margin-top: 30px !important;
+}
+
+.alert {
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
 }

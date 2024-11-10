@@ -82,9 +82,6 @@ class Bus(models.Model):
         if Bus.objects.filter(num_unidad=self.num_unidad).exclude(id=self.id).exists():
             raise ValidationError('El número de unidad ya existe.')
 
-        # Validar si el estado del bus es 'Habilitado'
-        if self.pk is None and (self.estado_bus is None or self.estado_bus.nombre != 'Habilitado'):
-            raise ValidationError('El bus debe estar habilitado.')
 
     def save(self, *args, **kwargs):
         self.full_clean()  # Llama a clean() antes de guardar

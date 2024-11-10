@@ -85,18 +85,19 @@ class ViajeForm(forms.ModelForm):
 class BusForm(forms.ModelForm):
     class Meta:
         model = Bus
-        fields = ['patente', 'num_unidad', 'fecha_compra', 'estado_bus']
+        fields = ['patente', 'num_unidad', 'fecha_compra']  # Removemos estado_bus del formulario
         widgets = {
             'patente': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la patente'}),
             'num_unidad': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de unidad'}),
             'fecha_compra': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'estado_bus': forms.Select(attrs={'class': 'form-select'}),
         }
+
     def clean_num_unidad(self):
         num_unidad = self.cleaned_data.get('num_unidad')
         if num_unidad <= 0:
             raise forms.ValidationError("El número de unidad debe ser positivo.")
         return num_unidad
+
     def clean_fecha_compra(self):
         fecha_compra = self.cleaned_data.get('fecha_compra')
         if fecha_compra > date.today():

@@ -1,9 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/recorrido/stylesmodificar.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -58,6 +55,9 @@
 </div>
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/recorrido/stylesmodificar.css' %}">
+{% endblock %}
 {% block extra_js %}
 <script src="{% static 'js/recorrido/paradas.js' %}"></script>
 {% endblock %}

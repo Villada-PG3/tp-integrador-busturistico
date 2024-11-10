@@ -1,4 +1,4 @@
-/* Título de la página */
+
 h2 {
     color: #2c3e50;
     font-weight: 600;
@@ -7,7 +7,7 @@ h2 {
     border-bottom: 3px solid #3498db;
 }
 
-/* Estilos de la tabla */
+
 .table {
     width: 100%;
     background-color: #fff;
@@ -19,7 +19,7 @@ h2 {
     overflow: hidden;
 }
 
-/* Encabezado de la tabla */
+
 .table thead {
     background-color: #06090c !important;
 }
@@ -39,7 +39,7 @@ h2 {
     border-right: none;
 }
 
-/* Cuerpo de la tabla */
+
 .table tbody tr {
     transition: all 0.3s ease;
 }
@@ -68,7 +68,7 @@ h2 {
     border-bottom: 1px solid #dee2e6;
 }
 
-/* Badges de estado */
+
 .estado-badge {
     padding: 0.5rem 1rem;
     border-radius: 50px;
@@ -93,7 +93,7 @@ h2 {
     color: white;
 }
 
-/* Información del bus */
+
 .bus-info {
     display: inline-flex;
     align-items: center;
@@ -108,7 +108,7 @@ h2 {
     text-decoration: none;
 }
 
-/* Botones */
+
 .btn {
     padding: 0.5rem 1rem;
     border-radius: 5px;
@@ -155,7 +155,7 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
     .container-fluid {
         padding: 1rem;
@@ -203,7 +203,7 @@ h2 {
     }
 }
 
-/* Animaciones */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -219,7 +219,7 @@ h2 {
     animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Filtros */
+
 .filters {
     background-color: #fff;
     padding: 1.5rem;

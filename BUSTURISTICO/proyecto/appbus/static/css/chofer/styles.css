@@ -1,28 +1,37 @@
 .dashboard-container {
-    padding: 20px;
+    padding: 30px;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .viaje-card {
     background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 .viaje-header {
-    background-color: #333;
+    background-color: #343a40;
     color: #fff;
-    padding: 10px;
-    border-bottom: 1px solid #333;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .viaje-body {
     padding: 20px;
+    font-size: 1rem;
+    color: #495057;
 }
 
 .info-grid {
@@ -34,11 +43,13 @@
 .info-item {
     display: flex;
     align-items: center;
+    font-size: 1rem;
 }
 
 .info-item i {
-    font-size: 24px;
-    margin-right: 10px;
+    font-size: 28px;
+    margin-right: 12px;
+    color: #0a0c0e;
 }
 
 .info-item div {
@@ -47,62 +58,77 @@
 }
 
 .info-item label {
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 5px;
+    color: #6c757d;
 }
 
 .info-item span {
-    font-size: 18px;
+    font-size: 1.1rem;
+    color: #343a40;
 }
 
 .actions-container {
     display: flex;
     justify-content: space-between;
+    margin-top: 25px;
 }
 
 .btn-action {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .start-btn {
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: #fff;
 }
 
 .start-btn:hover {
-    background-color: #3e8e41;
+    background-color: #218838;
+    transform: scale(1.05);
 }
 
 .end-btn {
-    background-color: #FF9800;
+    background-color: #ffc107;
     color: #fff;
 }
 
 .end-btn:hover {
-    background-color: #FFC107;
+    background-color: #e0a800;
+    transform: scale(1.05);
 }
 
 .status-badge {
     padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
 }
 
 .status-badge i {
-    font-size: 24px;
-    margin-right: 10px;
+    font-size: 20px;
+    margin-right: 8px;
 }
 
 .started {
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: #fff;
 }
 
 .ended {
-    background-color: #FF9800;
+    background-color: #ffc107;
     color: #fff;
+}
+
+.status-badge .icon {
+    font-size: 24px;
+    margin-right: 10px;
 }

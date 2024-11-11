@@ -100,7 +100,7 @@ Ingresar a  Config, ahi deberia encontrar el archivo settings.py, buscar la part
    Hay muestras iniciales, importalos a la base de datos recién creada:
 
     ```bash
-    python manage.py loaddata database.json
+    python manage.py loaddata db.json
     ```
 
 8. **Ejecutar el servidor:**

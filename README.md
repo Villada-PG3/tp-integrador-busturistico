@@ -234,136 +234,367 @@ erDiagram
 ```mermaid
 
 classDiagram
-    
-    Viaje "1" --> "1" Recorrido : ejecuta
-    
-    class Recorrido {
-    <<Modelo>>
-        +varchar nombre
-        +varchar codigo_alfanumerico
-        +Time hora_inicio
-        +Time hora_fin
-        +Time frecuencia
-        +iniciarRecorrido() 
-        +finalizarRecorrido() 
-        +ver_detalles()
-        +mostrar_recorridos()
-    }
 
-    Recorrido "1" --> "0..*" Orden_parada : tiene
-
-    Chofer "1" --> "1" Viaje : realiza
-    
-    class Viaje {
-        +int id_viaje
-        +int legajo
-        +int num_unidad 
-        +varchar codigo_alfanumerico 
-        +int id_estadoV 
-        +time horario_inicio_programado
-        +time horario_fin_programado
-        +date fecha_viaje
-        +datetime marca_inicio_viaje_real
-        +datetime marca_fin_viaje_real
-        +iniciarViaje()
-        +finalizarViaje()
-        +generarTicket(): varchar
-        +ver_detalles()
-    }
-
-    Viaje "1" --> "1" EstadoViaje : tienen
-    
-    class EstadoViaje {
-        +int id_estadoV
-        +varchar nombre
-        +varchar descripcion
-        +mostrar_estadoV()
-        ++cambiar_estadoV()
-        +get()
-        +set()
-    }
-    
-    Viaje "1" --> "1" Bus : se_asigna
-    
-    class Chofer {
-        +int legajo
-        +varchar nombre
-        +varchar apellido
-        +realizarViaje(Viaje)
-    }
-    
-    
-    class Bus {
-        +varchar patente
-        +int num_unidad
-        +date fecha_de_compra
-        int id_estadoB
-        +darDeAlta()
-        +inhabilitar()
-    }
-    
-    Bus "1" --> "1" EstadoBus : tienen
-    
     class EstadoBus {
-        +int id_estadoB
-        +varchar nombre
-        +varchar descripcion
-        +mostrar_estadoB()
-        +cambiar_estadoB()
-
-    }
-    
-    
-    Parada "1" --> "1" Tipo_parada : tiene
-
-    
-    class Tipo_parada {
-        +int id_tipo_parada
-        +varchar nombre_tipo_parada
-        +varchar descripcion
-        +mostrar_paradas_tipo()
+        +nombre: str
+        +descripcion: str
+        +__str__()
     }
 
-     class Parada {
-        +int idParada
-        +varchar nombre
-        +varchar direccion
-        +varchar descripcion
-        +longblob imagen
-        +mostrarInfo()
+    class EstadoViaje {
+        +nombre: str
+        +descripcion: str
+        +__str__()
     }
 
-    Parada "1" --> "0..*" Atractivoxparada : tiene
-    Parada "1" --> "0..*" Orden_parada : esta
-    
-    
-    class Atractivoxparada {
-        +int id_Atractivoxparada
-        +int id_atractivo
-        +int id_parada
-        +detalles_atractivo(): str
+    class Recorrido {
+        +nombre: str
+        +codigo_alfanumerico: str
+        +hora_inicio: Time
+        +hora_fin: Time
+        +frecuencia: Time
+        +__str__()
     }
 
-    Atractivoxparada "1" --> "1" Atractivo : pertenece
-  
-    
+    class Parada {
+        +nombre: str
+        +direccion: str
+        +descripcion: str
+        +imagen: bool
+        +tipo_parada: tipo_parada
+        +__str__()
+    }
+
+    class TipoParada {
+        +nombre_tipo_parada: str
+        +descripcion: str
+        +__str__()
+    }
+
     class Atractivo {
-        +int id_atractivo
-        +varchar nombre
-        +varchar descripcion
-        +float calificacion
-        +mostrarInfo()
-        +califcar()
+        +nombre: str
+        +descripcion: str
+        +calificacion: float
+        +__str__()
+    }
+
+    class AtractivoXParada {
+        +parada: parada
+        +atractivo: atractivo
+    }
+
+    class OrdenParada {
+        +parada: parada
+        +recorrido: recorrido
+        +asignacion_paradas: int
+    }
+
+    class Bus {
+        +patente: str
+        +num_unidad: int
+        +fecha_compra: date
+        +estado_bus: estad_bus
+        +clean()
+        +save()
+        +__str__()
+    }
+
+    class Chofer {
+        +legajo: int
+        +nombre: str
+        +apellido: str
+        +__str__()
+    }
+
+    class Viaje {
+        +chofer[]: listachoferes
+        +bus[]: listabuses
+        +recorrido[]: listarecorridos
+        +estado_viaje: estado_viaje
+        +horario_inicio_programado: time
+        +horario_fin_programado: time
+        +fecha_viaje: date
+        +marca_inicio_viaje_real: DateTime
+        +marca_fin_viaje_real: DateTime
+        +__str__()
+    }
+
+    EstadoBus "1" <-- Bus
+    EstadoViaje "1" <-- Viaje
+   
+    TipoParada "1" <-- Parada
+    AtractivoXParada "1..*" <-- Parada
+    AtractivoXParada "1..*" <-- Atractivo
+    OrdenParada "1..*" <-- Parada
+    OrdenParada "1..*" <-- Recorrido
+    Bus "1"<-- Viaje
+    Chofer "1" <-- Viaje
+    Recorrido  --> "1..*" Viaje
+    EstadoViaje "1" <-- Viaje
+
+
+
+
+
+
+
+    
+    RecorridoListView --> Recorrido
+    ListaRecorridosView --> Recorrido
+    RecorridoDetailView --> ControladorRecorrido
+    NuevoRecorridoView --> ControladorRecorridoNuevo
+    ControladorRecorrido ..> Recorrido
+    ControladorRecorridoNuevo ..> Recorrido
+
+
+
+
+    class ControladorRecorrido {
+    <<controlador>>
+        +obtener_recorrido_y_paradas()
+        +detail_recorrido()
+    }
+
+    class ListaRecorridosView {
+    <<interface>>
+        +is_superuser()
+        +get()
+        +post()
+    }
+
+    class RecorridoListView {
+    <<interface>>
+        recorridos
+    }
+
+    class RecorridoDetailView {
+    <<interface>>
+        +get()
+    }
+
+    class ControladorRecorridoNuevo {
+    <<controlador>>
+        +validar_recorrido()
+        +create_recorrido()
+    }
+
+    class NuevoRecorridoView {
+    <<interface>>
+        +validar_formulario()
+    }
+
+
+    ParadaDetailView --> Parada
+    ParadaDetailView --> AtractivoXParada
+    ControladorParada ..> Parada
+    ListaParadasView --> ControladorParada
+    CrearParadaView --> ControladorParada
+
+    class ParadaDetailView {
+    <<interface>>
+        +get()
+    }
+
+    class ControladorParada {
+    <<controlador>>
+        
+        +crear_parada()
+        +listar_paradas()
+        +eliminar_parada()
+    }
+
+    class ListaParadasView{
+    <<interface>>
+        +validar_superusuario()
+        +get()
+        +post()
+    }
+    class CrearParadaView{
+    <<interface>>
+        +validar_formulario()
     }
     
+    GestionParadaRecorridoView --> ControladorParadaRecorrido
+    ControladorParadaRecorrido ..> OrdenParada
+
+    class GestionParadaRecorridoView{
+    <<interface>>
+        +validar_superusuario()
+        +get()
+        +post()
     
-    class Orden_parada {
-        +int id_orden_parada
-        +int asignacion_paradas
-        +int id_parada
-        +int codigo_alfanumerico
-        +mostrarParada()
     }
+
+    class ControladorParadaRecorrido{
+    <<controlador>>
+        +obtener_contexto_gestion()
+        +procesar_peticion()
+        +_procesar_agregar()
+        +_procesar_eliminar()
+        +_validar_orden_parada()
+    }
+
+    MarcarViajeView --> Chofer
+    MarcarViajeView --> Viaje
+    ViajeListView --> Viaje
+    ViajeDetailView --> Viaje
+    CrearViajeView --> Bus
+    CrearViajeView --> EstadoViaje
+    CrearViajeView --> Viaje
+    EditarViajeView --> Viaje
+    EditarViajeView --> Bus
+    EditarViajeView --> EstadoViaje
+    ViajeController ..> Viaje
+
+
+
+    class MarcarViajeView {
+    <<interface>>
+        +get()
+        +post()
+    }
+
+    class ViajeListView {
+    <<interface>>
+        +get()
+        +post()
+    }
+
+    class ViajeDetailView {
+    <<interface>>
+        +get()
+    }
+
+    class CrearViajeView {
+    <<interface>>
+        +get()
+        +validar_formulario()
+    }
+
+    class EditarViajeView {
+    <<interface>>
+        +get()
+        +validar_formulario()
+    }
+
+    class ViajeController {
+    <<controlador>>
+        +crear_viaje()
+        +eliminar_viaje()
+    }
+
+    BusListView --> Bus
+    CrearBusView --> BusController
+    BusController ..> Bus
+
+
+    class BusListView {
+    <<interface>>
+        +get()
+        +post()
+    }
+
+    class CrearBusView {
+    <<interface>>
+        +get()
+    }
+
+    class BusController {
+    <<controlador>>
+        +crear_bus()
+        +listar_buses()
+        +eliminar_bus()
+    }
+
+    ChoferController ..> Chofer
+    ChoferLoginView --> ChoferController
+    ChoferListView --> ChoferController
+
+
+    class ChoferLoginView {
+    <<interface>>
+        +get()
+        +validar_formulario()
+    }
+
+    class ChoferListView {
+    <<interface>>
+        +get()
+        +post()
+    }
+
+    class ChoferController {
+    <<controlador>>
+        +crear_chofer()
+        +listar_choferes()
+        +eliminar_chofer()
+    }
+
+    ReporteViajesView --> ControladorReporteViajes
+    ControladorReporteViajes ..> Viaje
+
+    class ReporteViajesView {
+    <<interface>>
+        +get()
+    }
+
+    class ControladorReporteViajes {
+    <<controlador>>
+        +generar_reporte()
+        +_procesar_viajes()
+        +_procesar_viaje()
+        +_calcular_promedios()
+
+    }
+
+    ControladorAtractivo ..> Atractivo
+    ListaAtractivosView --> ControladorAtractivo
+    CrearAtractivoView --> ControladorAtractivo
+
+
+    class ControladorAtractivo {
+    <<controlador>>
+        +crear_atractivo()
+        +listar_atractivos()
+        +eliminar_atractivo()
+    }
+
+    class ListaAtractivosView {
+    <<interface>>
+        +validar_superusuario()
+        +get()
+        +post()
+    }
+
+    class CrearAtractivoView {
+    <<interface>>
+        +validar_superusuario()
+        +validar_formulario()
+    }
+
+    ControladorAtractivoXParada ..> AtractivoXParada
+    GestionAtractivosParadaView --> ControladorAtractivoXParada
+
+
+    class ControladorAtractivoXParada {
+    <<controlador>>
+        +obtener_contexto_gestion()
+        +agregar_atractivo_a_parada()
+        +eliminar_asignacion()
+    }
+
+    class GestionAtractivosParadaView {
+    <<interface>>
+        +validar_superusuario()
+        +get()
+        +post()
+    }
+
+  
+
+
+
+
 
 
 ```

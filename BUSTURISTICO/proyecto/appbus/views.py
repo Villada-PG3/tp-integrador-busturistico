@@ -138,7 +138,6 @@ class CrearParadaView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             return self.form_invalid(form)
     
     
-#NUEVA VISTA
 class GestionParadaRecorridoView(LoginRequiredMixin, UserPassesTestMixin, View):
     template_name = 'recorrido/gestion_paradas.html'
     
@@ -151,8 +150,7 @@ class GestionParadaRecorridoView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def post(self, request):
         resultado = ControladorParadaRecorrido.procesar_peticion(request)
-        if isinstance(resultado, JsonResponse):
-            return resultado
+        
         return redirect('gestion_paradas')
 
 class ControladorParadaRecorrido:
@@ -208,7 +206,8 @@ class ControladorParadaRecorrido:
             recorrido=data['recorrido'], 
             asignacion_paradas=data['asignacion_paradas']
         ).exists():
-            raise ValidationError('Ya existe una parada con ese orden en este recorrido')    
+            raise ValidationError('Ya existe una parada con ese orden en este recorrido')
+           
 
     
 

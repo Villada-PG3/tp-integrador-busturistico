@@ -1,7 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-
 {% block content %}
 <div class="container">
     <h2 class="text-center mb-4">Gestión de Paradas en Recorridos</h2>
@@ -42,9 +41,13 @@
                 {% for orden_parada in paradas %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ orden_parada.recorrido.nombre }} - {{ orden_parada.parada.nombre }} (Orden: {{ orden_parada.asignacion_paradas }})
-                        <button class="btn btn-danger btn-sm eliminar-parada" data-parada-id="{{ orden_parada.id }}">
-                            Eliminar
-                        </button>
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="orden_parada_id" value="{{ orden_parada.id }}">
+                            <button type="submit" name="eliminar" class="btn btn-danger btn-sm">
+                                Eliminar
+                            </button>
+                        </form>
                     </li>
                 {% empty %}
                     <li class="list-group-item">No hay paradas asignadas a recorridos.</li>

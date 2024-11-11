@@ -28,7 +28,7 @@
                 <td>{{ recorrido.codigo_alfanumerico }}</td>
                 <td>{{ recorrido.hora_inicio }}</td>
                 <td>{{ recorrido.hora_fin }}</td>
-                <td>{{ recorrido.frecuencia }}</td>
+                <td>{{ recorrido.frecuencia.minute }} minutos</td>
                 <td>
                     <form method="post" style="display:inline;">
                         {% csrf_token %}

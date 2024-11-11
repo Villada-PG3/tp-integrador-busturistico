@@ -28,10 +28,6 @@ class RecorridoForm(forms.ModelForm):
                 'class': 'form-control',
                 'type': 'time'
             }),
-            'frecuencia': forms.TimeInput(attrs={
-                'class': 'form-control',
-                'type': 'time'
-            })
         }
         labels = {
             'nombre': 'Nombre del Recorrido',
@@ -56,6 +52,7 @@ class RecorridoForm(forms.ModelForm):
 
         if frecuencia:
             minutos = frecuencia.hour * 60 + frecuencia.minute
+            
             if minutos < 5 or minutos > 60:
                 raise forms.ValidationError('La frecuencia debe estar entre 5 y 60 minutos')
 
